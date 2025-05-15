@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
+using System.ComponentModel.DataAnnotations.Schema; // Dodaj ten using
 
 namespace CarRenter.Auth.Models
 {
+    [Table("titiUsers")] // Dodaj ten atrybut
     public class User
     {
         public int Id { get; set; }

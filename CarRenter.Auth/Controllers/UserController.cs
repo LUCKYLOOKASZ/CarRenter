@@ -22,7 +22,7 @@ namespace CarRenter.Auth.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _context.Users
+            var users = await _context.titiUsers
                 .Select(u => new {
                     u.Id,
                     u.Username,
@@ -38,7 +38,7 @@ namespace CarRenter.Auth.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.titiUsers.FindAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -55,7 +55,7 @@ namespace CarRenter.Auth.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.titiUsers.FindAsync(id);
             if (user == null)
                 return NotFound();
 
@@ -69,14 +69,14 @@ namespace CarRenter.Auth.Controllers
 
         // DELETE: api/user/{id}
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.titiUsers.FindAsync(id);
             if (user == null)
                 return NotFound();
 
-            _context.Users.Remove(user);
+            _context.titiUsers.Remove(user);
             await _context.SaveChangesAsync();
             return Ok("User deleted.");
         }

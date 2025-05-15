@@ -31,7 +31,7 @@ namespace CarRenter.Auth.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (_context.Users.Any(u => u.Username == dto.Username))
+            if (_context.titiUsers.Any(u => u.Username == dto.Username))
                 return BadRequest("Username already exists.");
 
             var passwordHasher = new PasswordHasher<User>();
@@ -45,7 +45,7 @@ namespace CarRenter.Auth.Controllers
 
             try
             {
-                _context.Users.Add(user);
+                _context.titiUsers.Add(user);
                 _context.SaveChanges();
             }
             catch (DbUpdateException ex)
@@ -61,7 +61,7 @@ namespace CarRenter.Auth.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] Dtos.LoginRequest dto)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Username == dto.Username);
+            var user = _context.titiUsers.FirstOrDefault(u => u.Username == dto.Username);
             if (user == null)
                 return Unauthorized("User not found");
 

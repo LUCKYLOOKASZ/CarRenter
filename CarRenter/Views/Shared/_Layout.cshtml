@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var isLogged = Context.Session.GetString("JWToken") != null;
+    var username = Context.Session.GetString("Username");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,7 +31,41 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+
+                    <ul class="navbar-nav ms-auto">
+                        @if (isLogged)
+                        {
+                            @if (!string.IsNullOrEmpty(username))
+                            {
+                                <li class="nav-item d-flex align-items-center">
+                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="Settings"><b>@username</b></a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <a href="#" class="nav-link text-dark" id="logout-link">Wyloguj się</a>
+                                <form id="logout-form" asp-controller="Account" asp-action="Logout" method="post" style="display:none;">
+                                    @Html.AntiForgeryToken()
+                                </form>
+                            </li>
+                            <script>
+                                document.getElementById('logout-link')?.addEventListener('click', function (e) {
+                                    e.preventDefault();
+                                    document.getElementById('logout-form').submit();
+                                });
+                            </script>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Zaloguj się</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Zarejestruj się</a>
+                            </li>
+                        }
+                    </ul>
                 </div>
+
             </div>
         </nav>
     </header>
