@@ -58,6 +58,8 @@ namespace CarRenter.Auth.Controllers
 
             return Ok("User successfully registered.");
         }
+
+        // Zmień zwracaną odpowiedź w metodzie Login, aby zawierała także rolę użytkownika
         [HttpPost("login")]
         public IActionResult Login([FromBody] Dtos.LoginRequest dto)
         {
@@ -71,12 +73,13 @@ namespace CarRenter.Auth.Controllers
             if (result == PasswordVerificationResult.Failed)
                 return Unauthorized("Invalid password");
 
-            // Token generowany na podstawie danych użytkownika
             var claims = new[]
             {
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Role)
+                //new Claim(ClaimTypes.Role, "Admin")
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -90,14 +93,12 @@ namespace CarRenter.Auth.Controllers
                 signingCredentials: creds
             );
 
+            // Dodaj pole 'role' do odpowiedzi
             return Ok(new
             {
-                token = new JwtSecurityTokenHandler().WriteToken(token)
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+                role = user.Role
             });
         }
-
-
-
-
     }
 }

@@ -1,0 +1,23 @@
+﻿@model List<VehicleViewModel>
+
+<h2>Lista samochodów</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <p>Brak dostępnych samochodów.</p>
+}
+else
+{
+    <ul>
+        @foreach (var car in Model)
+        {
+            <li class="mb-4">
+                <img src="@Url.Content($"~/carpng/{car.UrlObrazka}")" alt="@car.Marka @car.Model" style="width:150px;height:auto;" />
+                <strong>@car.Marka @car.Model (@car.Rok)</strong><br />
+                Cena za dzień: @car.KwotaZaDzien zł<br />
+                @car.Opis<br />
+                <a href="@Url.Action("Details", "Car", new { id = car.Id })" class="btn btn-primary mt-2">Więcej informacji</a>
+            </li>
+        }
+    </ul>
+}

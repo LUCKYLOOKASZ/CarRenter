@@ -1,6 +1,8 @@
 ﻿using CarRenter.Auth.Data;
+using CarRenter.Auth.Dtos;
 using CarRenter.Auth.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,7 +55,8 @@ namespace CarRenter.Auth.Controllers
 
         // PUT: api/user/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto updatedUser)
         {
             var user = await _context.titiUsers.FindAsync(id);
             if (user == null)
@@ -62,6 +65,26 @@ namespace CarRenter.Auth.Controllers
             user.Username = updatedUser.Username;
             user.Email = updatedUser.Email;
             user.Role = updatedUser.Role;
+
+            await _context.SaveChangesAsync();
+            return Ok("User updated.");
+        }
+
+        [HttpPut("editwithpassword/{id}")]
+        //[Authorize]
+        public async Task<IActionResult> EditWithPassword(int id, [FromBody] UserEditDto updatedUser)
+        {
+            var user = await _context.titiUsers.FindAsync(id);
+            if (user == null)
+                return NotFound("User not found.");
+
+            user.Username = updatedUser.Username;
+            user.Email = updatedUser.Email;
+            var passwordHasher = new PasswordHasher<User>();
+            if (!string.IsNullOrWhiteSpace(updatedUser.NewPassword))
+            {
+                user.PasswordHash = passwordHasher.HashPassword(user, updatedUser.NewPassword); // Możesz użyć własnej metody haszowania
+            }
 
             await _context.SaveChangesAsync();
             return Ok("User updated.");

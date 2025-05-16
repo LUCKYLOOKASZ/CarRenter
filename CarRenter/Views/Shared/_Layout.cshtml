@@ -1,6 +1,8 @@
 ﻿@{
     var isLogged = Context.Session.GetString("JWToken") != null;
     var username = Context.Session.GetString("Username");
+    var userRole = Context.Session.GetString("Role");
+    var isAdmin = userRole == "Admin";
 }
 
 <!DOCTYPE html>
@@ -30,6 +32,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Car" asp-action="Index">Samochody</a>
+                        </li>
                     </ul>
 
                     <ul class="navbar-nav ms-auto">
@@ -38,9 +43,17 @@
                             @if (!string.IsNullOrEmpty(username))
                             {
                                 <li class="nav-item d-flex align-items-center">
-                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="Settings"><b>@username</b></a>
+                                    @if (isAdmin)
+                                    {
+                                        <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index"><b>@username</b></a>
+                                    }
+                                    else
+                                    {
+                                        <a class="nav-link text-dark" asp-controller="Account" asp-action="EditSelf"><b>@username</b></a>
+                                    }
                                 </li>
                             }
+
                             <li class="nav-item">
                                 <a href="#" class="nav-link text-dark" id="logout-link">Wyloguj się</a>
                                 <form id="logout-form" asp-controller="Account" asp-action="Logout" method="post" style="display:none;">

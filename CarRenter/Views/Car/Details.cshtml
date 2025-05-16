@@ -1,0 +1,12 @@
+﻿@model VehicleViewModel
+
+<h2>@Model.Marka @Model.Model</h2>
+
+<img src="@Url.Content($"~/carpng/{Model.UrlObrazka}")" alt="Zdjęcie auta" style="max-width:400px;" />
+<ul>
+    <li><strong>Rok:</strong> @Model.Rok</li>
+    <li><strong>Kwota za dzień:</strong> @Model.KwotaZaDzien zł</li>
+    <li><strong>Opis:</strong> @Model.Opis</li>
+</ul>
+
+<a href="@Url.Action("Index", "Car")">← Powrót do listy</a>

@@ -1,0 +1,46 @@
+﻿@model List<VehicleViewModel>
+
+<h2>Panel administracyjny – Samochody</h2>
+
+<div class="mb-3">
+    <a asp-controller="Car" asp-action="Create" class="btn btn-success">Dodaj nowy samochód</a>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <p>Brak dostępnych samochodów.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Marka</th>
+                <th>Model</th>
+                <th>Rok</th>
+                <th>Cena za dzień (zł)</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var car in Model)
+            {
+                <tr>
+                    <td>@car.Id</td>
+                    <td>@car.Marka</td>
+                    <td>@car.Model</td>
+                    <td>@car.Rok</td>
+                    <td>@car.KwotaZaDzien</td>
+                    <td>
+                        <a asp-controller="Admin" asp-action="EditVehicle" asp-route-id="@car.Id" class="btn btn-warning btn-sm">Edytuj</a>
+                        @* <a asp-controller="Car" asp-action="Delete" asp-route-id="@car.Id" class="btn btn-danger btn-sm">Usuń</a> *@
+                        <form asp-controller="Admin" asp-action="DeleteVehicle" asp-route-id="@car.Id" method="post" style="display:inline;" onsubmit="return confirm('Na pewno usunąć użytkownika?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Usuń</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
