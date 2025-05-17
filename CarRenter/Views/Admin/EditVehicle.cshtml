@@ -1,4 +1,4 @@
-﻿@model CarRenter.Models.VehicleViewModel
+﻿@model CarRenter.Models.NowyModelDlaEdycjiAuta
 
 @{
     ViewData["Title"] = "Edytuj samochód";
@@ -7,36 +7,34 @@
 <h2>Edytuj samochód</h2>
 
 <form asp-action="EditVehicle" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="id" />
 
     <div class="mb-3">
-        <label asp-for="Marka" class="form-label"></label>
-        <input asp-for="Marka" class="form-control" />
+        <label asp-for="marka" class="form-label"></label>
+        <input asp-for="marka" class="form-control" />
     </div>
 
+    @* <div class="mb-3">
+        <label asp-for="model" class="form-label"></label>
+        <input asp-for="model" class="form-control" />
+    </div> *@
     <div class="mb-3">
-        <label asp-for="Model" class="form-label"></label>
-        <input asp-for="Model" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="Rok" class="form-label"></label>
-        <input asp-for="Rok" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Opis" class="form-label"></label>
-        <input asp-for="Opis" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label asp-for="UrlObrazka" class="form-label"></label>
-        <input asp-for="UrlObrazka" class="form-control" />
+        <label asp-for="rok" class="form-label"></label>
+        <input asp-for="rok" class="form-control" />
     </div>
 
     <div class="mb-3">
-        <label asp-for="KwotaZaDzien" class="form-label"></label>
-        <input asp-for="KwotaZaDzien" class="form-control" step="0.01" type="number" />
-        <small class="text-muted">Użyj kropki jako separatora dziesiętnego, np. 800.00</small>
+        <label asp-for="opis" class="form-label"></label>
+        <input asp-for="opis" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="urlObrazka" class="form-label"></label>
+        <input asp-for="urlObrazka" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="kwotaZaDzien" class="form-label"></label>
+        <input asp-for="kwotaZaDzien" class="form-control" />
     </div>
 
     <button type="submit" class="btn btn-primary">Zapisz</button>
