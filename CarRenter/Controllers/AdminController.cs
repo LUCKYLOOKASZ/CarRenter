@@ -135,7 +135,9 @@ namespace CarRenter.Controllers
             return View(model);
         }
 
-        
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<IActionResult> Vehicles()
         {
             var token = HttpContext.Session.GetString("JWToken");
@@ -201,7 +203,7 @@ namespace CarRenter.Controllers
             var json = JsonConvert.SerializeObject(model);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync("http://localhost:6000/Vehicles", content);
+            var response = await client.PostAsync("http://localhost:6000/vehicles", content);
 
             if (response.IsSuccessStatusCode)
                 return RedirectToAction("Vehicles");
@@ -276,9 +278,9 @@ namespace CarRenter.Controllers
         //    return View(model);
         //}
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditVehicle(NowyModelDlaEdycjiAuta model)
         {
-            Console.WriteLine($"DEBUG: Odebrane dane - {System.Text.Json.JsonSerializer.Serialize(model)}");
             if (!ModelState.IsValid)
             {
                 Console.WriteLine("Błędy walidacji:");
@@ -292,11 +294,21 @@ namespace CarRenter.Controllers
                 }
                 return View(model);
             }
-
+            Console.WriteLine($"DEBUG: Odebrane dane - {System.Text.Json.JsonSerializer.Serialize(model)}");
 
             var client = _httpClientFactory.CreateClient();
 
-            var json = System.Text.Json.JsonSerializer.Serialize(model);
+            var dto = new
+            {
+                marka = model.marka,
+                model = model.nazwaModel,
+                rok = model.rok,
+                kwotaZaDzien = model.kwotaZaDzien,
+                opis = model.opis,
+                urlObrazka = model.urlObrazka
+            };
+
+            var json = System.Text.Json.JsonSerializer.Serialize(dto);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await client.PutAsync($"http://localhost:6000/Vehicles/{model.id}", content);
@@ -304,6 +316,8 @@ namespace CarRenter.Controllers
             if (response.IsSuccessStatusCode)
                 return RedirectToAction("Vehicles");
 
+            Console.WriteLine($"[ERROR] json: {json}");
+            TempData["Error"] = "Nie udało się zaktualizować danych pojazdu.";
             return View(model);
         }
 
