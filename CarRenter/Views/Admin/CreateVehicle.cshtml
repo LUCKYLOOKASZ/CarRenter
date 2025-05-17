@@ -2,7 +2,7 @@
 
 <h2>Dodaj nowy samochód</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="CreateVehicle" method="post">
     <div class="form-group">
         <label>Marka</label>
         <input asp-for="Marka" class="form-control" />
@@ -13,11 +13,11 @@
     </div>
     <div class="form-group">
         <label>Rok</label>
-        <input asp-for="Rok" class="form-control" type="number" />
+        <input asp-for="Rok" class="form-control" />
     </div>
     <div class="form-group">
         <label>Kwota za dzień (zł)</label>
-        <input asp-for="KwotaZaDzien" class="form-control" type="number" step="0.01" />
+        <input asp-for="KwotaZaDzien" class="form-control" />
     </div>
     <div class="form-group">
         <label>Opis</label>
