@@ -336,5 +336,47 @@ namespace CarRenter.Controllers
             TempData["Error"] = "Nie udało się usunąć pojazdu";
             return RedirectToAction("Vehicles");
         }
+        ///////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////
+        public async Task<IActionResult> Reservations(int? vehicleId)
+        {
+            var token = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(token))
+                return RedirectToAction("Login", "Account");
+
+            // (opcjonalnie) sprawdź, czy użytkownik jest adminem
+            string currentUserRole = null;
+            var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+            var jwt = handler.ReadJwtToken(token);
+            var roleClaim = jwt.Claims.FirstOrDefault(c =>
+                c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
+            if (roleClaim != null)
+                currentUserRole = roleClaim.Value;
+            if (currentUserRole != "Admin")
+                return Unauthorized();
+
+            var client = _httpClientFactory.CreateClient();
+            HttpResponseMessage response;
+            if (vehicleId.HasValue)
+            {
+                response = await client.GetAsync($"http://localhost:5007/api/Reservation/by-vehicle/{vehicleId.Value}");
+                ViewBag.FilterVehicleId = vehicleId.Value;
+            }
+            else
+            {
+                response = await client.GetAsync("http://localhost:5007/api/Reservation");
+                ViewBag.FilterVehicleId = null;
+            }
+
+            var reservations = new List<ReservationDto>();
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                reservations = System.Text.Json.JsonSerializer.Deserialize<List<ReservationDto>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+
+            return View(reservations);
+        }
     }
 }

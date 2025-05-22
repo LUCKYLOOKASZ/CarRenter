@@ -1,12 +1,34 @@
-﻿@model VehicleViewModel
+﻿@model CarDetailsViewModel
 
-<h2>@Model.Marka @Model.Model</h2>
-
-<img src="@Url.Content($"~/carpng/{Model.UrlObrazka}")" alt="Zdjęcie auta" style="max-width:400px;" />
+<h2>@Model.Vehicle.Marka @Model.Vehicle.Model</h2>
+<img src="@Url.Content($"~/carpng/{Model.Vehicle.UrlObrazka}")" alt="Zdjęcie auta" style="max-width:400px;" />
 <ul>
-    <li><strong>Rok:</strong> @Model.Rok</li>
-    <li><strong>Kwota za dzień:</strong> @Model.KwotaZaDzien zł</li>
-    <li><strong>Opis:</strong> @Model.Opis</li>
+    <li><strong>Rok:</strong> @Model.Vehicle.Rok</li>
+    <li><strong>Kwota za dzień:</strong> @Model.Vehicle.KwotaZaDzien zł</li>
+    <li><strong>Opis:</strong> @Model.Vehicle.Opis</li>
 </ul>
+<a asp-controller="Reservation" asp-action="Create" asp-route-vehicleId="@Model.Vehicle.Id" class="btn btn-success">
+    Zarezerwuj
+</a>
+<div>
+    <h3>Rezerwacje</h3>
+    @if (Model.Reservations != null && Model.Reservations.Any())
+    {
+        <ul>
+            @foreach (var res in Model.Reservations)
+            {
+                <li>
+                    <strong>@res.StartDate.ToShortDateString()</strong> - <strong>@res.EndDate.ToShortDateString()</strong>
+                    @* (UserId: @res.UserId) *@
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>Brak rezerwacji dla tego pojazdu.</p>
+    }
+</div>
+
 
 <a href="@Url.Action("Index", "Car")">← Powrót do listy</a>

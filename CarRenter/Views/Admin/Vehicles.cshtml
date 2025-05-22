@@ -1,5 +1,11 @@
 ﻿@model List<VehicleViewModel>
 
+<div style="margin-bottom: 20px;">
+    <a asp-controller="Admin" asp-action="Index" class="btn btn-primary" style="margin-right: 10px;">Users</a>
+    <a asp-controller="Admin" asp-action="Vehicles" class="btn btn-primary" style="margin-right: 10px;">Vehicles</a>
+    <a asp-controller="Admin" asp-action="Reservations" class="btn btn-primary" style="margin-right: 10px;">Reservations</a>
+</div>
+
 <h2>Panel administracyjny – Samochody</h2>
 
 <div class="mb-3">
@@ -38,6 +44,13 @@ else
                         <form asp-controller="Admin" asp-action="DeleteVehicle" asp-route-id="@car.Id" method="post" style="display:inline;" onsubmit="return confirm('Na pewno usunąć użytkownika?');">
                             <button type="submit" class="btn btn-sm btn-danger">Usuń</button>
                         </form>
+                        <a asp-controller="Admin"
+                           asp-action="Reservations"
+                           asp-route-vehicleId="@car.Id"
+                           class="btn btn-info btn-sm"
+                           style="margin-left: 5px;">
+                            Zobacz rezerwacje
+                        </a>
                     </td>
                 </tr>
             }

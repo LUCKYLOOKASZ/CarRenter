@@ -1,0 +1,51 @@
+﻿@model List<CarRenter.Models.ReservationDto>
+
+<div style="margin-bottom: 20px;">
+    <a asp-controller="Admin" asp-action="Index" class="btn btn-primary" style="margin-right: 10px;">Users</a>
+    <a asp-controller="Admin" asp-action="Vehicles" class="btn btn-primary" style="margin-right: 10px;">Vehicles</a>
+    <a asp-controller="Admin" asp-action="Reservations" class="btn btn-primary" style="margin-right: 10px;">Reservations</a>
+</div>
+
+<h2>All Reservations</h2>
+    <form method="get" asp-action="Reservations" asp-controller="Admin" class="mb-3">
+        <div class="input-group" style="max-width: 300px;">
+            <input type="number" name="vehicleId" class="form-control" placeholder="Vehicle ID" value="@(ViewBag.FilterVehicleId ?? "")" />
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a asp-action="Reservations" class="btn btn-secondary">Clear</a>
+        </div>
+    </form>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Reservation ID</th>
+                <th>Vehicle ID</th>
+                <th>User ID</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Created At</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var res in Model)
+            {
+                <tr>
+                    <td>@res.ReservationId</td>
+                    <td>@res.VehicleId</td>
+                    <td>@res.UserId</td>
+                    <td>@res.StartDate.ToShortDateString()</td>
+                    <td>@res.EndDate.ToShortDateString()</td>
+                    <td>@res.CreatedAt.ToShortDateString()</td>
+                    <td>@res.Notes</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No reservations found.</p>
+}

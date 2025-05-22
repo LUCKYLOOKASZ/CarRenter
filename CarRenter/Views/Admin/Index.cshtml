@@ -1,5 +1,11 @@
 ﻿@model List<CarRenter.Controllers.UserViewModel>
 
+<div style="margin-bottom: 20px;">
+    <a asp-controller="Admin" asp-action="Index" class="btn btn-primary" style="margin-right: 10px;">Users</a>
+    <a asp-controller="Admin" asp-action="Vehicles" class="btn btn-primary" style="margin-right: 10px;">Vehicles</a>
+    <a asp-controller="Admin" asp-action="Reservations" class="btn btn-primary" style="margin-right: 10px;">Reservations</a>
+</div>
+
 <h2>Lista użytkowników</h2>
 
 <table class="table table-bordered">

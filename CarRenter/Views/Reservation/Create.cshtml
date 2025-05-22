@@ -1,0 +1,45 @@
+﻿@model CarRenter.Models.CreateReservationViewModel
+
+<h2>Nowa rezerwacja</h2>
+
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="VehicleId" />
+    <input type="hidden" asp-for="CurrentUserId" />
+    <div class="mb-3">
+        <label asp-for="StartDate" class="form-label"></label>
+        <input asp-for="StartDate" class="form-control" type="date" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="EndDate" class="form-label"></label>
+        <input asp-for="EndDate" class="form-control" type="date" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Notes" class="form-label"></label>
+        <textarea asp-for="Notes" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Zarezerwuj</button>
+    <a asp-action="Details" asp-controller="Car" asp-route-id="@Model.VehicleId" class="btn btn-secondary">Anuluj</a>
+</form>
+
+@if (Model.ExistingReservations != null && Model.ExistingReservations.Any())
+{
+    <h3>Aktualne rezerwacje tego pojazdu</h3>
+    <ul>
+        @* <p>CurrentUserId: @Model.CurrentUserId</p> *@
+        @foreach (var res in Model.ExistingReservations)
+        {
+            <li>
+                <strong>@res.StartDate.ToShortDateString()</strong> - <strong>@res.EndDate.ToShortDateString()</strong>
+                @* (UserId: @res.UserId) *@
+                @if (Model.CurrentUserId.HasValue && res.UserId == Model.CurrentUserId.Value)
+                {
+                    <span style="color: green;">(Twoja rezerwacja)</span>
+                }
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Brak rezerwacji dla tego pojazdu.</p>
+}

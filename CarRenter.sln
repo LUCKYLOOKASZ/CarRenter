@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRenter.Gateway", "CarRen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleService", "VehicleService\VehicleService.csproj", "{38311C44-143A-4EFA-847E-9EF29302049C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservationService", "ReservationService\ReservationService.csproj", "{D3283AC5-B929-4399-9FBB-6983359C5BDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,18 @@ Global
 		{38311C44-143A-4EFA-847E-9EF29302049C}.Release|x64.Build.0 = Release|Any CPU
 		{38311C44-143A-4EFA-847E-9EF29302049C}.Release|x86.ActiveCfg = Release|Any CPU
 		{38311C44-143A-4EFA-847E-9EF29302049C}.Release|x86.Build.0 = Release|Any CPU
+		{D3283AC5-B929-4399-9FBB-6983359C5BDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3283AC5-B929-4399-9FBB-6983359C5BDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3283AC5-B929-4399-9FBB-6983359C5BDC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D3283AC5-B929-4399-9FBB-6983359C5BDC}.Debug|x64.Build.0 = Debug|Any CPU
+		{D3283AC5-B929-4399-9FBB-6983359C5BDC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D3283AC5-B929-4399-9FBB-6983359C5BDC}.Debug|x86.Build.0 = Debug|Any CPU
+		{D3283AC5-B929-4399-9FBB-6983359C5BDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3283AC5-B929-4399-9FBB-6983359C5BDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3283AC5-B929-4399-9FBB-6983359C5BDC}.Release|x64.ActiveCfg = Release|Any CPU
+		{D3283AC5-B929-4399-9FBB-6983359C5BDC}.Release|x64.Build.0 = Release|Any CPU
+		{D3283AC5-B929-4399-9FBB-6983359C5BDC}.Release|x86.ActiveCfg = Release|Any CPU
+		{D3283AC5-B929-4399-9FBB-6983359C5BDC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

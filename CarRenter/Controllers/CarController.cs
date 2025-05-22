@@ -35,20 +35,32 @@ public class CarController : Controller
     public async Task<IActionResult> Details(int id)
     {
         var client = _httpClientFactory.CreateClient();
-        var response = await client.GetAsync($"http://localhost:6000/vehicles/{id}");
 
+        // Pobierz dane auta
+        var response = await client.GetAsync($"http://localhost:6000/vehicles/{id}");
         if (!response.IsSuccessStatusCode)
-        {
             return NotFound();
-        }
 
         var content = await response.Content.ReadAsStringAsync();
-        var vehicle = JsonSerializer.Deserialize<VehicleViewModel>(content, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        var vehicle = JsonSerializer.Deserialize<VehicleViewModel>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        return View(vehicle);
+        // Pobierz rezerwacje dla pojazdu
+        var reservations = new List<ReservationDto>();
+        var resResponse = await client.GetAsync($"http://localhost:6000/Reservation/by-vehicle/{id}");
+        if (resResponse.IsSuccessStatusCode)
+        {
+            var resContent = await resResponse.Content.ReadAsStringAsync();
+            reservations = JsonSerializer.Deserialize<List<ReservationDto>>(resContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        // Stwórz wspólny model
+        var model = new CarDetailsViewModel
+        {
+            Vehicle = vehicle,
+            Reservations = reservations
+        };
+
+        return View(model);
     }
 
 }
