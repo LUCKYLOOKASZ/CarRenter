@@ -4,6 +4,7 @@
     {
         public VehicleViewModel Vehicle { get; set; }
         public List<ReservationDto> Reservations { get; set; }
+        public int? CurrentUserId { get; set; }
     }
 
 }

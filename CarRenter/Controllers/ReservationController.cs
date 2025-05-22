@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -75,9 +76,28 @@ namespace CarRenter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateReservationViewModel model)
         {
-
             if (!ModelState.IsValid)
                 return View(model);
+
+            var client = _httpClientFactory.CreateClient();
+          
+            var existingResponse = await client.GetAsync($"http://localhost:6000/Reservation/by-vehicle/{model.VehicleId}");
+            var existingReservations = new List<ReservationDto>();
+            if (existingResponse.IsSuccessStatusCode)
+            {
+                var existingContent = await existingResponse.Content.ReadAsStringAsync();
+                existingReservations = JsonSerializer.Deserialize<List<ReservationDto>>(existingContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            bool isOverlapping = existingReservations.Any(r =>
+                model.StartDate < r.EndDate && model.EndDate > r.StartDate
+            );
+
+            if (isOverlapping)
+            {
+                ModelState.AddModelError("", "Wybrany termin jest już zajęty dla tego pojazdu.");
+                model.ExistingReservations = existingReservations;
+                return View(model);
+            }
 
             var reservationDto = new
             {
@@ -88,19 +108,34 @@ namespace CarRenter.Controllers
                 Notes = model.Notes
             };
 
-            var client = _httpClientFactory.CreateClient();
-            var content = new StringContent(
-                JsonSerializer.Serialize(reservationDto),
-                Encoding.UTF8,
-                "application/json"
-            );
+            var content = new StringContent(JsonSerializer.Serialize(reservationDto), Encoding.UTF8, "application/json");
             var response = await client.PostAsync("http://localhost:6000/Reservation", content);
 
             if (response.IsSuccessStatusCode)
                 return RedirectToAction("Details", "Car", new { id = model.VehicleId });
 
             ModelState.AddModelError("", "Nie udało się utworzyć rezerwacji.");
+            model.ExistingReservations = existingReservations;
             return View(model);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id, int vehicleId)
+        {
+            var token = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(token))
+                return RedirectToAction("Login", "Account");
+
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await client.DeleteAsync($"http://localhost:6000/Reservation/{id}");
+
+            // Po usunięciu wróć na stronę szczegółów auta lub listę rezerwacji
+            return RedirectToAction("Details", "Car", new { id = vehicleId });
+
+        }
+
+
     }
 }

@@ -27,6 +27,7 @@
                 <th>End Date</th>
                 <th>Created At</th>
                 <th>Notes</th>
+                <th>Akcje</th>
             </tr>
         </thead>
         <tbody>
@@ -40,6 +41,16 @@
                     <td>@res.EndDate.ToShortDateString()</td>
                     <td>@res.CreatedAt.ToShortDateString()</td>
                     <td>@res.Notes</td>
+                    <td>
+                        <form asp-controller="Admin"
+                              asp-action="DeleteReservation"
+                              asp-route-id="@res.ReservationId"
+                              method="post"
+                              style="display:inline;"
+                              onsubmit="return confirm('Czy na pewno chcesz usunąć tę rezerwację?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>

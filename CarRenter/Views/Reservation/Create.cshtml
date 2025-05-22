@@ -19,6 +19,11 @@
     </div>
     <button type="submit" class="btn btn-primary">Zarezerwuj</button>
     <a asp-action="Details" asp-controller="Car" asp-route-id="@Model.VehicleId" class="btn btn-secondary">Anuluj</a>
+    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+    {
+        <div class="alert alert-danger">@error.ErrorMessage</div>
+    }
+
 </form>
 
 @if (Model.ExistingReservations != null && Model.ExistingReservations.Any())

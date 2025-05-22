@@ -378,5 +378,22 @@ namespace CarRenter.Controllers
 
             return View(reservations);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteReservation(int id)
+        {
+            var token = HttpContext.Session.GetString("JWToken");
+            if (string.IsNullOrEmpty(token))
+                return RedirectToAction("Login", "Account");
+
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await client.DeleteAsync($"http://localhost:6000/Reservation/{id}");
+
+            // Po usunięciu wróć do listy rezerwacji
+            return RedirectToAction("Reservations");
+        }
+
     }
 }

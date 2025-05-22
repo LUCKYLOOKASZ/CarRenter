@@ -14,12 +14,27 @@
     <h3>Rezerwacje</h3>
     @if (Model.Reservations != null && Model.Reservations.Any())
     {
+        <h3>Aktualne rezerwacje tego pojazdu</h3>
         <ul>
+            @* <p>CurrentUserId: @Model.CurrentUserId</p> *@
             @foreach (var res in Model.Reservations)
             {
                 <li>
                     <strong>@res.StartDate.ToShortDateString()</strong> - <strong>@res.EndDate.ToShortDateString()</strong>
                     @* (UserId: @res.UserId) *@
+                    @if (Model.CurrentUserId.HasValue && res.UserId == Model.CurrentUserId.Value)
+                    {
+                        <span style="color: green;">(Twoja rezerwacja)</span>
+                        <form asp-controller="Reservation"
+                              asp-action="Delete"
+                              asp-route-id="@res.ReservationId"
+                              method="post"
+                              style="display:inline;"
+                              onsubmit="return confirm('Czy na pewno chcesz usunąć tę rezerwację?');">
+                            <input type="hidden" name="vehicleId" value="@Model.Vehicle.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm" style="margin-left: 8px;">Usuń</button>
+                        </form>
+                    }
                 </li>
             }
         </ul>

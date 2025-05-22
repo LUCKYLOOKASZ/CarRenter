@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CarRenter.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text.Json;
-using CarRenter.Models;
 
 public class CarController : Controller
 {
@@ -41,6 +42,19 @@ public class CarController : Controller
         if (!response.IsSuccessStatusCode)
             return NotFound();
 
+        var token = HttpContext.Session.GetString("JWToken");
+        int? currentUserId = null;
+        if (!string.IsNullOrEmpty(token))
+        {
+            var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+            var jwt = handler.ReadJwtToken(token);
+            // Najczęściej userId jest w "sub" lub "nameid"
+            var userIdClaim = jwt.Claims.FirstOrDefault(c =>
+                c.Type == "sub" || c.Type == "nameid" || c.Type == ClaimTypes.NameIdentifier);
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int uid))
+                currentUserId = uid;
+        }
+
         var content = await response.Content.ReadAsStringAsync();
         var vehicle = JsonSerializer.Deserialize<VehicleViewModel>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
@@ -57,7 +71,8 @@ public class CarController : Controller
         var model = new CarDetailsViewModel
         {
             Vehicle = vehicle,
-            Reservations = reservations
+            Reservations = reservations,
+            CurrentUserId = currentUserId
         };
 
         return View(model);
